@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faRedo } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 
-function ScorePanel({ moves }) {
-  if (moves > 12) {
+function ScorePanel({ moves, openedCards, randomizeCards }) {
+  if (openedCards > 12) {
     return (
       <section className="score-panel">
         <ul className="stars">
@@ -21,11 +21,11 @@ function ScorePanel({ moves }) {
         </ul>
         <span className="moves">{moves}</span> Moves
         <div className="restart">
-          <FontAwesomeIcon icon={faRedo} />
+          <FontAwesomeIcon icon={faRedo} onClick={randomizeCards} />
         </div>
       </section>
     );
-  } else if (moves > 4 && moves <= 12) {
+  } else if (openedCards > 4 && openedCards <= 12) {
     return (
       <section className="score-panel">
         <ul className="stars">
@@ -41,7 +41,7 @@ function ScorePanel({ moves }) {
         </ul>
         <span className="moves">{moves}</span> Moves
         <div className="restart">
-          <FontAwesomeIcon icon={faRedo} />
+          <FontAwesomeIcon icon={faRedo} onClick={randomizeCards} />{" "}
         </div>
       </section>
     );
@@ -61,7 +61,7 @@ function ScorePanel({ moves }) {
         </ul>
         <span className="moves">{moves}</span> Moves
         <div className="restart">
-          <FontAwesomeIcon icon={faRedo} />
+          <FontAwesomeIcon icon={faRedo} onClick={randomizeCards} />{" "}
         </div>
       </section>
     );
