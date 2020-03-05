@@ -2,14 +2,14 @@ import React from "react";
 import { cards } from "./components/cards.js";
 import Deck from "./components/Deck.js";
 import ScorePanel from "./components/ScorePanel.js";
-import "./App.css";
+import "./App.scss";
 
 class App extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      moves: 18,
+      moves: 0,
       openedCards: 0,
       cardDeck: [],
       currentOpenedCard: ""
@@ -37,11 +37,16 @@ class App extends React.Component {
     const cardDeck = document.querySelector(".deck");
 
     // 02. add event listener for clicks
-    cardDeck.addEventListener("click", function(e) {
+    cardDeck.addEventListener("click", e => {
       let target = e.target.closest(".card");
       console.log(target);
       if (target !== null) {
         target.classList.add("open");
+        this.setState(prevState => {
+          return {
+            moves: prevState.moves + 1
+          };
+        });
       }
     });
     // 03. Show one card at click

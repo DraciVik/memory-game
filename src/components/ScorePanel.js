@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faRedo } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 
-function ScorePanel({ moves, openedCards, randomizeCards }) {
-  if (openedCards > 12) {
+function ScorePanel({ moves, randomizeCards }) {
+  if (moves < 18) {
     return (
       <section className="score-panel">
         <ul className="stars">
@@ -25,7 +25,7 @@ function ScorePanel({ moves, openedCards, randomizeCards }) {
         </div>
       </section>
     );
-  } else if (openedCards > 4 && openedCards <= 12) {
+  } else if (moves >= 18 && moves <= 20) {
     return (
       <section className="score-panel">
         <ul className="stars">
