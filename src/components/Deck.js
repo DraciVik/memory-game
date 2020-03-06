@@ -10,7 +10,7 @@ class Deck extends React.Component {
       <CardDeck className="deck">
         {cardDeck.map((card, index) => {
           return (
-            <Card key={index} className="card">
+            <Card key={index} data-id={card.id} className="card">
               <FontAwesomeIcon icon={card.icon} />
             </Card>
           );

@@ -10,52 +10,68 @@ import {
 
 const cards = [
   {
-    icon: faGem
+    icon: faGem,
+    id: "gem"
   },
   {
-    icon: faPaperPlane
+    icon: faPaperPlane,
+    id: "plane"
   },
   {
-    icon: faAnchor
+    icon: faAnchor,
+    id: "anchor"
   },
   {
-    icon: faBolt
+    icon: faBolt,
+    id: "bolt"
   },
   {
-    icon: faCube
+    icon: faCube,
+    id: "cube"
   },
   {
-    icon: faLeaf
+    icon: faLeaf,
+    id: "leaf"
   },
   {
-    icon: faBicycle
+    icon: faBicycle,
+    id: "bicycle"
   },
   {
-    icon: faBomb
+    icon: faBomb,
+    id: "bomb"
   },
   {
-    icon: faGem
+    icon: faGem,
+    id: "gem"
   },
   {
-    icon: faPaperPlane
+    icon: faPaperPlane,
+    id: "plane"
   },
   {
-    icon: faAnchor
+    icon: faAnchor,
+    id: "anchor"
   },
   {
-    icon: faBolt
+    icon: faBolt,
+    id: "bolt"
   },
   {
-    icon: faCube
+    icon: faCube,
+    id: "cube"
   },
   {
-    icon: faLeaf
+    icon: faLeaf,
+    id: "leaf"
   },
   {
-    icon: faBicycle
+    icon: faBicycle,
+    id: "bicycle"
   },
   {
-    icon: faBomb
+    icon: faBomb,
+    id: "bomb"
   }
 ];
 

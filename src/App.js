@@ -12,23 +12,60 @@ class App extends React.Component {
       moves: 0,
       openedCards: 0,
       cardDeck: [],
+      currentOpenedCardId: "",
       currentOpenedCard: ""
     };
 
-    this.handleRemoveClass = this.handleRemoveClass.bind(this);
-    this.handleAddClass = this.handleAddClass.bind(this);
+    this.handleOpenCard = this.handleOpenCard.bind(this);
     this.randomizeCards = this.randomizeCards.bind(this);
+    this.handleResetClasses = this.handleResetClasses.bind(this);
   }
 
-  handleRemoveClass(items, className) {
-    for (let item of items) {
-      item.classList.remove(className);
-    }
-  }
-
-  handleAddClass(items, className) {
-    for (let item of items) {
-      item.classList.add(className);
+  handleOpenCard(e) {
+    let target = e.target.closest(".card");
+    let id = e.target.dataset.id;
+    if (target !== null) {
+      if (this.state.currentOpenedCard === "") {
+        target.classList.add("open", "show");
+        this.setState(prevState => {
+          return {
+            moves: prevState.moves + 1,
+            currentOpenedCardId: id,
+            currentOpenedCard: target
+          };
+        });
+      } else if (this.state.currentOpenedCardId !== "") {
+        if (id === this.state.currentOpenedCardId) {
+          target.classList.add("open", "show", "match");
+          this.state.currentOpenedCard.classList.add("match");
+          this.setState(prevState => {
+            return {
+              openedCards: (prevState.openedCards += 2),
+              currentOpenedCardId: "",
+              currentOpenedCard: "",
+              moves: prevState.moves + 1
+            };
+          });
+        } else {
+          target.classList.add("open", "show", "nomatch");
+          this.state.currentOpenedCard.classList.add("nomatch");
+          setTimeout(() => {
+            this.state.currentOpenedCard.classList.remove(
+              "open",
+              "show",
+              "nomatch"
+            );
+            target.classList.remove("open", "show", "nomatch");
+            this.setState(prevState => {
+              return {
+                currentOpenedCardId: "",
+                currentOpenedCard: "",
+                moves: prevState.moves + 1
+              };
+            });
+          }, 820);
+        }
+      }
     }
   }
 
@@ -36,22 +73,25 @@ class App extends React.Component {
     this.randomizeCards();
     const cardDeck = document.querySelector(".deck");
 
-    // 02. add event listener for clicks
-    cardDeck.addEventListener("click", e => {
-      let target = e.target.closest(".card");
-      console.log(target);
-      if (target !== null) {
-        target.classList.add("open");
-        this.setState(prevState => {
-          return {
-            moves: prevState.moves + 1
-          };
-        });
-      }
-    });
-    // 03. Show one card at click
-    // 04. if second card is the same keep them open - otherwise revert back to closed
-    // 05. count down on the moves
+    cardDeck.addEventListener("click", this.handleOpenCard);
+  }
+
+  componentWillUnmount() {
+    const cardDeck = document.querySelector(".deck");
+    cardDeck.removeEventListener("click", this.handleOpenCard);
+  }
+
+  handleResetClasses(e) {
+    let target = e.target.closest(".card");
+    console.log(target);
+    if (target !== null) {
+      target.classList.remove("open", "show");
+      this.setState(prevState => {
+        return {
+          moves: prevState.moves + 1
+        };
+      });
+    }
   }
 
   randomizeCards() {
@@ -65,10 +105,16 @@ class App extends React.Component {
         shuffle.splice(randomIndex, 1);
       }
     }
-    this.setState({ cardDeck: currentCards });
-
-    // TODO
-    // 01 - transfer cardDeck to cardDeck component
+    this.setState({
+      cardDeck: currentCards,
+      moves: 0,
+      openedCards: 0,
+      currentOpenedCard: ""
+    });
+    let displayedCards = document.querySelectorAll(".card");
+    for (let card of displayedCards) {
+      card.classList.remove("open", "show", "match");
+    }
   }
 
   render() {
