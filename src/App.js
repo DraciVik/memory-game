@@ -2,6 +2,7 @@ import React from "react";
 import { cards } from "./components/cards.js";
 import Deck from "./components/Deck.js";
 import ScorePanel from "./components/ScorePanel.js";
+import WonGameScreen from "./components/WonGameScreen.js";
 import "./App.scss";
 
 class App extends React.Component {
@@ -9,8 +10,8 @@ class App extends React.Component {
     super();
 
     this.state = {
-      moves: 0,
-      openedCards: 0,
+      moves: 20,
+      openedCards: 16,
       cardDeck: [],
       currentOpenedCardId: "",
       currentOpenedCard: ""
@@ -18,14 +19,17 @@ class App extends React.Component {
 
     this.handleOpenCard = this.handleOpenCard.bind(this);
     this.randomizeCards = this.randomizeCards.bind(this);
-    this.handleResetClasses = this.handleResetClasses.bind(this);
   }
 
   handleOpenCard(e) {
+    const { currentOpenedCard, currentOpenedCardId } = this.state;
+
     let target = e.target.closest(".card");
     let id = e.target.dataset.id;
+    // target must be a card
     if (target !== null) {
-      if (this.state.currentOpenedCard === "") {
+      // If no card is opened
+      if (currentOpenedCard === "") {
         target.classList.add("open", "show");
         this.setState(prevState => {
           return {
@@ -34,10 +38,12 @@ class App extends React.Component {
             currentOpenedCard: target
           };
         });
-      } else if (this.state.currentOpenedCardId !== "") {
-        if (id === this.state.currentOpenedCardId) {
+        // If one card is already opened
+      } else if (currentOpenedCardId !== "") {
+        // If they match
+        if (id === currentOpenedCardId) {
           target.classList.add("open", "show", "match");
-          this.state.currentOpenedCard.classList.add("match");
+          currentOpenedCard.classList.add("match");
           this.setState(prevState => {
             return {
               openedCards: (prevState.openedCards += 2),
@@ -47,51 +53,38 @@ class App extends React.Component {
             };
           });
         } else {
+          // If they don't match
           target.classList.add("open", "show", "nomatch");
-          this.state.currentOpenedCard.classList.add("nomatch");
+          currentOpenedCard.classList.add("nomatch");
           setTimeout(() => {
-            this.state.currentOpenedCard.classList.remove(
-              "open",
-              "show",
-              "nomatch"
-            );
+            currentOpenedCard.classList.remove("open", "show", "nomatch");
             target.classList.remove("open", "show", "nomatch");
-            this.setState(prevState => {
-              return {
-                currentOpenedCardId: "",
-                currentOpenedCard: "",
-                moves: prevState.moves + 1
-              };
-            });
           }, 820);
+          this.setState(prevState => {
+            return {
+              currentOpenedCardId: "",
+              currentOpenedCard: "",
+              moves: prevState.moves + 1
+            };
+          });
         }
       }
     }
   }
 
   componentDidMount() {
-    this.randomizeCards();
-    const cardDeck = document.querySelector(".deck");
+    const { openedCards } = this.state;
+    if (openedCards !== 16) {
+      this.randomizeCards();
+      const cardDeck = document.querySelector(".deck");
 
-    cardDeck.addEventListener("click", this.handleOpenCard);
+      cardDeck.addEventListener("click", this.handleOpenCard);
+    }
   }
 
   componentWillUnmount() {
     const cardDeck = document.querySelector(".deck");
     cardDeck.removeEventListener("click", this.handleOpenCard);
-  }
-
-  handleResetClasses(e) {
-    let target = e.target.closest(".card");
-    console.log(target);
-    if (target !== null) {
-      target.classList.remove("open", "show");
-      this.setState(prevState => {
-        return {
-          moves: prevState.moves + 1
-        };
-      });
-    }
   }
 
   randomizeCards() {
@@ -109,7 +102,8 @@ class App extends React.Component {
       cardDeck: currentCards,
       moves: 0,
       openedCards: 0,
-      currentOpenedCard: ""
+      currentOpenedCard: "",
+      currentOpenedCardId: ""
     });
     let displayedCards = document.querySelectorAll(".card");
     for (let card of displayedCards) {
@@ -119,20 +113,27 @@ class App extends React.Component {
 
   render() {
     const { moves, openedCards, cardDeck } = this.state;
-    return (
-      <div className="container">
-        <header>
-          <h1>Matching Game</h1>
-        </header>
 
-        <ScorePanel
-          moves={moves}
-          openedCards={openedCards}
-          randomizeCards={this.randomizeCards}
-        />
-        <Deck cardDeck={cardDeck} />
-      </div>
-    );
+    if (openedCards < 16) {
+      return (
+        <div className="container">
+          <header>
+            <h1>Matching Game</h1>
+          </header>
+
+          <ScorePanel
+            moves={moves}
+            openedCards={openedCards}
+            randomizeCards={this.randomizeCards}
+          />
+          <Deck cardDeck={cardDeck} />
+        </div>
+      );
+    } else if (openedCards === 16) {
+      return (
+        <WonGameScreen randomizeCards={this.randomizeCards} moves={moves} />
+      );
+    }
   }
 }
 
