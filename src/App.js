@@ -10,8 +10,8 @@ class App extends React.Component {
     super();
 
     this.state = {
-      moves: 20,
-      openedCards: 16,
+      moves: 0,
+      openedCards: 0,
       cardDeck: [],
       currentOpenedCardId: "",
       currentOpenedCard: ""
@@ -19,6 +19,20 @@ class App extends React.Component {
 
     this.handleOpenCard = this.handleOpenCard.bind(this);
     this.randomizeCards = this.randomizeCards.bind(this);
+    this.handleStartOver = this.handleStartOver.bind(this);
+  }
+
+  handleStartOver() {
+    this.setState({
+      moves: 0,
+      openedCards: 0,
+      cardDeck: [],
+      currentOpenedCardId: "",
+      currentOpenedCard: ""
+    });
+    this.randomizeCards();
+    // const cardDeck = document.querySelector(".deck");
+    // cardDeck.addEventListener("click", this.handleOpenCard);
   }
 
   handleOpenCard(e) {
@@ -60,6 +74,7 @@ class App extends React.Component {
             currentOpenedCard.classList.remove("open", "show", "nomatch");
             target.classList.remove("open", "show", "nomatch");
           }, 820);
+
           this.setState(prevState => {
             return {
               currentOpenedCardId: "",
@@ -76,15 +91,7 @@ class App extends React.Component {
     const { openedCards } = this.state;
     if (openedCards !== 16) {
       this.randomizeCards();
-      const cardDeck = document.querySelector(".deck");
-
-      cardDeck.addEventListener("click", this.handleOpenCard);
     }
-  }
-
-  componentWillUnmount() {
-    const cardDeck = document.querySelector(".deck");
-    cardDeck.removeEventListener("click", this.handleOpenCard);
   }
 
   randomizeCards() {
@@ -126,7 +133,7 @@ class App extends React.Component {
             openedCards={openedCards}
             randomizeCards={this.randomizeCards}
           />
-          <Deck cardDeck={cardDeck} />
+          <Deck handleOpenCard={this.handleOpenCard} cardDeck={cardDeck} />
         </div>
       );
     } else if (openedCards === 16) {
